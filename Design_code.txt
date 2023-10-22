@@ -1,0 +1,110 @@
+module sd_mealy(clk,reset,w,z,current_state,next_state); //consequtive 1111 or 1001
+  
+  input clk,reset,w;
+  output reg z;	
+		parameter S0=  3'd0; //states
+		parameter S1=  3'd1;
+		parameter S2=  3'd2;
+        parameter S3=  3'd3;
+        parameter S4=  3'd4;
+        parameter S5=  3'd5;
+
+
+      
+       
+  output reg [2:0]current_state;
+  output reg [2:0]next_state;
+  
+  always@(w or current_state) // reset
+        begin
+            if(reset==0)
+              begin
+                current_state=S0;
+                next_state=S0;
+              end
+              else
+                begin
+                  current_state=next_state;
+
+                  case(current_state)
+
+                    S0: if(w==0)
+                        begin
+                          next_state=S0;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S1;
+                            z=0;
+                          end
+                    S1: if(w==0)
+                        begin
+                          next_state=S2;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S4;
+                            z=0;
+                          end
+                    S2: if(w==0)
+                        begin
+                          next_state=S3;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S1;
+                            z=0;
+                          end
+                    S3: if(w==0)
+                        begin
+                          next_state=S0;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S1;
+                            z=1;
+                          end
+                    
+                         
+                    S4: if(w==0)
+                        begin
+                          next_state=S2;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S5;
+                            z=0;
+                          end
+                    S5: if(w==0)
+                        begin
+                          next_state=S2;
+                          z=0;
+                        end
+                        else
+                          begin
+                            next_state=S5;
+                            z=1;
+                          end
+                    
+                    
+                 endcase
+                end
+        end    
+                  always@(negedge reset or posedge clk)
+                    begin
+                      if(reset==0)
+                        current_state=S0;
+                      else
+                        current_state=next_state;
+                    end
+          
+            
+
+       
+          endmodule
+                 
